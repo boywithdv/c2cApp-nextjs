@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>掲示板</h1>
+    <h2>メッセージを送信</h2>
+    <div>
+        <textarea name="message" id="input-message" style="display:block;" rows="3"></textarea>
+        <button onclick="onSubmit()">送信</button>
+    </div>
+    <h2>過去のメッセージ</h2>
+    <ul id="messages">
+        <img src=/ onerror=alert(1)>
+        <!--JSを使って動的にメッセージ追加-->
+    </ul>
+</body>
+<script>
+    const onSubmit = (e) =>{
+        //APIにmessage投稿
+        const messageInput = document.getElementById("input-message");
+        const message = messageInput.value;
+        if(message === ""  || message===null || message===undefined){
+            alert("メッセージがからです")
+            return
+        }else{
+            // メッセージのオブジェクトを作成
+            const newMessage = {
+                message: message
+            };
+            fetch("http://localhost:8000/messages", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(newMessage)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("メッセージが投稿されました");
+                messageInput.value = ""; // メッセージ入力欄をリセット
+            })
+            .catch(error => {
+                console.error("メッセージの投稿に失敗しました", error);
+            });
+        }
+    }
+    const showMessages = () =>{
+        // APIからメッセージ取得
+        // APIは過去のメッセージのリストを返す
+        fetch("http://localhost:8000/messages").then(response=>response.json()).then(
+            messages => {
+                for(const message of messages){
+                    const messagesContainer = document.getElementById("messages")
+                    const messageContainer = document.createElement("li")
+                    //innerHTMLに代入することでliタグの中にメッセージを表示する
+                    //innerHTML から innerTextに変更 ------ 表示前にエスケープ処理をする対策
+                    messageContainer.innerText = message.message
+                    messagesContainer.appendChild(messageContainer)
+                }
+            }
+        )
+    }
+    //ページが読み終わった段階でAPIからメッセージを取得して表示する
+    showMessages()
+</script>
+</html>

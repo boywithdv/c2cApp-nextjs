@@ -1,0 +1,58 @@
+
+AppThemeという型定義
+export type AppTheme = typeof theme
+
+
+
+themeの異なるプロパティのキーの型を定義
+type SpaceThemeKeys = keyof typeof theme.space
+
+
+
+Space型 ---------------------- SpaceThemeKeysか文字列型を返す
+export type Space = SpaceThemeKeys | (string&{})
+
+
+ブレイクポイントの名前とその値をキーとしてもつ
+const BREAKPOINTS:{[key:string]:string} = {}
+
+
+propがResponsive型かどうかの処理
+export function toPropValue<T>(propKey:string,prop?:Responsive<T>,theme?:AppTheme){}
+
+
+
+セットを定義 --------------------- テーマの各プロパティに対応するCSSプロパティのキーを格納する
+const COLOR_KEYS = new Set(['color','background-color'])
+
+
+
+
+与えられたプリパティが特定のキーに該当するかどうかをチェックし、該当する場合テーマの値を返す
+function toThemeValueIfNeeded<T>(propKey:string,value:T,theme?:AppTheme){}
+
+
+
+
+isResponsivePropType関数 ----------------- 与えられたプロパティがResponsiveProp型であるかチェック
+function isResponsivePropType<T>(prop:any):prop is ResponsiveProp<T>{}
+
+
+
+
+
+// is〇〇ThemeKeys関数 ------------- 各テーマのキーの型をチェックするためのヘルパー関数
+// 与えられたプロパティがテーマのキーに該当するかどうかを確認する
+function isSpaceThemeKeys(prop:any,theme:AppTheme):prop is SpaceThemeKeys{}
+
+
+
+やっていること
+・AppTheme定義
+・themeの異なるプロパティのキーの型を定義(theme.space等々)
+・Space型 ---------------------- SpaceThemeKeysか文字列型を返す
+・ブレイクポイントの名前とその値をキーとしてもつ
+・propがResponsive型かどうかの処理
+・セットを定義 --------------------- テーマの各プロパティに対応するCSSプロパティのキーを格納する
+・与えられたプロパティがResponsiveProp型であるかチェック(true or false)
+・与えられたプリパティが特定のキーに該当するかどうかをチェックし、該当する場合テーマの値を返す(toThemeValueIfNeeded関数)
